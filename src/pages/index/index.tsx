@@ -1,6 +1,6 @@
 import taro from "@tarojs/taro";
 import { View, Text } from "@tarojs/components";
-import { Checkbox, Input, Button, Cell, Dialog } from "@taroify/core";
+import { Checkbox, Input, Button, Dialog } from "@taroify/core";
 import "./index.less";
 import React, { useState, useEffect, useRef } from "react";
 
