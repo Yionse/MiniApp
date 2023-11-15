@@ -10,7 +10,7 @@ page {
   display: flex;
   flex-direction: column;
   .header {
-    height: 20%;
+    height: 10%;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -19,11 +19,17 @@ page {
   }
   .content {
     width: 100%;
-    height: 80%;
+    height: 90%;
     // background-color: skyblue;
+    overflow-y: scroll;
+    // text-decoration: line-through;
   }
   .active {
-    --checkbox-checked-icon-border-color: #ee0a24;
-    --checkbox-checked-icon-background-color: #ee0a24;
+    --checkbox-checked-icon-border-color: #87ceeb;
+    --checkbox-checked-icon-background-color: #87ceeb;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 }
