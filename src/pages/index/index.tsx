@@ -166,7 +166,7 @@ function Context({ items, setItems }: ContextProps) {
           <Text style={{ color: "white" }}>You will delete this message.</Text>
         </Dialog.Header>
         <Dialog.Content>{message.current?.text}</Dialog.Content>
-        <Dialog.Actions>
+        <Dialog.Actions variant="rounded">
           <Button
             onClick={() => {
               deleteItem(message.current?.id as number);
