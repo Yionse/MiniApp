@@ -1,8 +1,8 @@
 import taro from "@tarojs/taro";
 import { View, Text } from "@tarojs/components";
-import { Checkbox, Input, Button } from "@taroify/core";
+import { Checkbox, Input, Button, Cell, Dialog } from "@taroify/core";
 import "./index.less";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export type ContextProps = {
   setItems: React.Dispatch<
@@ -121,12 +121,18 @@ function Title({ text, count }: { text: string; count: number }) {
 function Context({ items, setItems }: ContextProps) {
   const unStart = items.filter((item) => !item.isFinish);
   const finish = items.filter((item) => item.isFinish);
+  const [open, setOpen] = useState<boolean>(false);
+  const message = useRef<{ id: number; text: string }>();
 
   const changeStatus = (id: number) => {
     const currentItem = items.find((item) => item.id === id) as any;
     const item = items.filter((item) => item.id !== id);
     item.push({ ...currentItem, isFinish: !currentItem?.isFinish });
     setItems(item);
+  };
+
+  const deleteItem = (id: number) => {
+    setItems(items.filter((item) => item.id !== id));
   };
 
   return (
@@ -138,6 +144,8 @@ function Context({ items, setItems }: ContextProps) {
           isFinish={isFinish}
           text={text}
           changeStatus={changeStatus}
+          setOpen={setOpen}
+          message={message}
           id={id}
         />
       ))}
@@ -148,9 +156,27 @@ function Context({ items, setItems }: ContextProps) {
           isFinish={isFinish}
           text={text}
           changeStatus={changeStatus}
+          setOpen={setOpen}
+          message={message}
           id={id}
         />
       ))}
+      <Dialog open={open} onClose={setOpen} style={{ background: "black" }}>
+        <Dialog.Header>
+          <Text style={{ color: "white" }}>You will delete this message.</Text>
+        </Dialog.Header>
+        <Dialog.Content>{message.current?.text}</Dialog.Content>
+        <Dialog.Actions>
+          <Button
+            onClick={() => {
+              deleteItem(message.current?.id as number);
+              setOpen(false);
+            }}
+          >
+            Confirm
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
     </View>
   );
 }
@@ -160,11 +186,21 @@ function Item({
   text,
   id,
   changeStatus,
+  setOpen,
+  message,
 }: {
   isFinish: boolean;
   text: string;
   id: number;
   changeStatus: (id: number) => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  message: React.MutableRefObject<
+    | {
+        id: number;
+        text: string;
+      }
+    | undefined
+  >;
 }) {
   return (
     <View
@@ -175,6 +211,10 @@ function Item({
         paddingLeft: "20rpx",
         margin: "30rpx 0",
         justifyContent: "flex-start",
+      }}
+      onLongPress={() => {
+        setOpen(true);
+        message.current = { id, text };
       }}
     >
       <View style={{ width: "10%", textAlign: "center", position: "relative" }}>
